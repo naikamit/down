@@ -1,10 +1,5 @@
 flask==2.3.3
 gunicorn==21.2.0
 requests==2.31.0
-websockets==11.0.3
-bidict==0.22.1
-strenum==0.4.15
-ujson==5.8.0
 python-dotenv==1.0.0
 pytz==2023.3
-git+https://github.com/tastytrade/tastytrade-sdk-python.git
