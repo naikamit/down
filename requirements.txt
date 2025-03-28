@@ -1,11 +1,9 @@
-# requirements.txt
-Flask==2.3.2
-pytz==2023.3
-websockets==11.0.3
+flask==2.3.3
+gunicorn==21.2.0
 requests==2.31.0
-gunicorn==20.1.0
-python-dotenv==1.0.0
-injector==0.20.1
+websockets==11.0.3
 bidict==0.22.1
+strenum==0.4.15
 ujson==5.8.0
-# tastytrade-sdk removed (using local implementation)
+python-dotenv==1.0.0
+pytz==2023.3
