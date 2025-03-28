@@ -7,7 +7,8 @@ import traceback
 from datetime import datetime
 import pytz
 
-from tasty_client import TastyClient
+# Use the direct API implementation instead of the SDK
+from tasty_api import TastyTradeAPI as TastyClient
 from binary_search import BinarySearch
 from trading import TradingLogic
 from logger import api_logger
