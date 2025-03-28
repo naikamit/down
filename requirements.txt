@@ -8,4 +8,4 @@ python-dotenv==1.0.0
 injector==0.20.1
 bidict==0.22.1
 ujson==5.8.0
-tastytrade-sdk==1.1.1
+# tastytrade-sdk removed (using local implementation)
