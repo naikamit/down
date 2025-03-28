@@ -98,7 +98,7 @@ h2 {
 #logs {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 15px; /* Increased from 10px to give more space between entries */
 }
 
 .log-entry {
@@ -159,19 +159,25 @@ h2 {
     color: #dc3545;
 }
 
+.log-summary {
+    margin-bottom: 15px; /* Increased from 10px */
+    font-weight: bold;   /* Added bold to make the summary stand out */
+}
+
 .log-details {
     margin-top: 10px;
     border-top: 1px solid var(--card-border);
     padding-top: 10px;
+    /* No display:none here since we want it always visible */
 }
 
 .log-detail {
-    margin-bottom: 8px;
+    margin-bottom: 12px; /* Increased from 8px */
 }
 
 .log-detail-label {
     font-weight: bold;
-    margin-bottom: 2px;
+    margin-bottom: 5px; /* Increased from 2px */
     color: var(--muted-text);
 }
 
@@ -182,23 +188,6 @@ h2 {
     overflow-x: auto;
     font-family: monospace;
     white-space: pre-wrap;
-}
-
-.toggle-details {
-    background: none;
-    border: none;
-    color: var(--muted-text);
-    cursor: pointer;
-    font-size: 12px;
-    margin-left: 10px;
-}
-
-.toggle-details:hover {
-    text-decoration: underline;
-}
-
-.log-summary {
-    margin-bottom: 10px;
 }
 
 /* Responsive */
