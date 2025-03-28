@@ -5,8 +5,8 @@ import logging
 from datetime import datetime, timedelta
 import pytz
 
-from trading import process_long_signal, process_short_signal, close_positions
-from dashboard import add_event, get_events
+from app.trading import process_long_signal, process_short_signal, close_positions
+from app.dashboard import add_event, get_events
 
 # Configure logging
 logging.basicConfig(
