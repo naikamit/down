@@ -5,8 +5,9 @@ import time
 from datetime import datetime, timedelta
 import pytz
 from tastytrade_sdk import Tastytrade
-from binary_search import binary_search_shares
-from dashboard import add_event
+from app.binary_search import binary_search_shares
+from app.dashboard import add_event
+from app.main import set_successful_trade
 
 logger = logging.getLogger(__name__)
 
