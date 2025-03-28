@@ -4,6 +4,7 @@ import os
 import requests
 import json
 import time
+import re
 
 logger = logging.getLogger(__name__)
 
@@ -14,8 +15,14 @@ class TastyTradeAPI:
         """Initialize the API client with credentials from environment variables"""
         self.login_email = os.environ.get('TASTYTRADE_LOGIN')
         self.password = os.environ.get('TASTYTRADE_PASSWORD')
-        # Fixed the API base URL - remove any potential typos like extra parentheses
-        self.base_url = f"https://{os.environ.get('API_BASE_URL', 'api.tastytrade.com')}"
+        
+        # FIXED: Hardcode the base URL to avoid any environment variable issues
+        # Remove any special characters that might cause URL issues
+        base_domain = "api.tastytrade.com"
+        self.base_url = f"https://{base_domain}"
+        
+        logger.info(f"Initializing TastyTradeAPI with base URL: {self.base_url}")
+        
         self.session = requests.Session()
         self.session.headers.update({
             'User-Agent': 'tastytrade-webhook-service/1.0',
@@ -30,7 +37,7 @@ class TastyTradeAPI:
         try:
             logger.info(f"Logging in with email: {self.login_email}")
             
-            # Log the actual URL being used for debugging
+            # Build the URL carefully to avoid any issues
             login_url = f"{self.base_url}/sessions"
             logger.info(f"Attempting to connect to: {login_url}")
             
