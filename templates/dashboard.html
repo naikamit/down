@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TT-Direct Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>TT-Direct API Dashboard</h1>
+        <div class="stats">
+            <div class="stat-card">
+                <h3>Total Requests</h3>
+                <p id="total-requests">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Successful</h3>
+                <p id="successful-requests">0</p>
+            </div>
+            <div class="stat-card">
+                <h3>Failed</h3>
+                <p id="failed-requests">0</p>
+            </div>
+        </div>
+        
+        <div class="log-container">
+            <h2>API Logs</h2>
+            <div class="filter-container">
+                <label>
+                    <input type="checkbox" id="show-requests" checked>
+                    Requests
+                </label>
+                <label>
+                    <input type="checkbox" id="show-responses" checked>
+                    Responses
+                </label>
+                <label>
+                    <input type="checkbox" id="show-errors" checked>
+                    Errors
+                </label>
+            </div>
+            <div id="logs"></div>
+        </div>
+    </div>
+    
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
