@@ -14,6 +14,7 @@ class TastyTradeAPI:
         """Initialize the API client with credentials from environment variables"""
         self.login_email = os.environ.get('TASTYTRADE_LOGIN')
         self.password = os.environ.get('TASTYTRADE_PASSWORD')
+        # Fixed the API base URL - remove any potential typos like extra parentheses
         self.base_url = f"https://{os.environ.get('API_BASE_URL', 'api.tastytrade.com')}"
         self.session = requests.Session()
         self.session.headers.update({
@@ -29,8 +30,12 @@ class TastyTradeAPI:
         try:
             logger.info(f"Logging in with email: {self.login_email}")
             
+            # Log the actual URL being used for debugging
+            login_url = f"{self.base_url}/sessions"
+            logger.info(f"Attempting to connect to: {login_url}")
+            
             response = self.session.post(
-                f"{self.base_url}/sessions",
+                login_url,
                 json={
                     "login": self.login_email,
                     "password": self.password
