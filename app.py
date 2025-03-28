@@ -6,8 +6,12 @@ import json
 import traceback
 from datetime import datetime
 import pytz
+# Update in app.py
+from tasty_api import TastyTradeAPI  # Instead of TastyClient
 
-from tasty_client import TastyClient
+# Update in binary_search.py and trading.py
+# Replace tasty_client with tasty_api and update method calls if needed
+
 from binary_search import BinarySearch
 from trading import TradingLogic
 from logger import api_logger
