@@ -1,4 +1,4 @@
-# tasty_api.py - Direct TastyTrade API client without SDK dependency
+# Path: /tasty_api.py
 import logging
 import os
 import requests
