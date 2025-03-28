@@ -93,28 +93,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 logSummary.textContent = log.status === 'error' ? 'Error Response' : 'Success Response';
             }
             
-            // Create toggle details button
-            const toggleDetails = document.createElement('button');
-            toggleDetails.className = 'toggle-details';
-            toggleDetails.textContent = 'Show Details';
-            toggleDetails.onclick = function() {
-                const details = logEntry.querySelector('.log-details');
-                if (details.style.display === 'none' || details.style.display === '') {
-                    details.style.display = 'block';
-                    toggleDetails.textContent = 'Hide Details';
-                } else {
-                    details.style.display = 'none';
-                    toggleDetails.textContent = 'Show Details';
-                }
-            };
-            
-            logSummary.appendChild(toggleDetails);
             logEntry.appendChild(logSummary);
             
-            // Create log details
+            // Create log details - always visible
             const logDetails = document.createElement('div');
             logDetails.className = 'log-details';
-            logDetails.style.display = 'none';
+            // No longer hidden by default
             
             if (log.type === 'request') {
                 // Method and Endpoint
