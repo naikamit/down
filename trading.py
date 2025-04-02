@@ -22,9 +22,14 @@ class TradingLogic:
         # Stock symbols
         self.long_symbol = "MSTU"
         self.short_symbol = "MSTZ"
-        
+    
     def _is_in_lockout_period(self):
-        """Check if we're in the lockout period after a successful buy"""
+        """
+        Check if we're in the lockout period after a successful buy
+        
+        Returns:
+            bool: True if in lockout period, False otherwise
+        """
         if not self.last_successful_buy:
             return False
             
@@ -39,29 +44,29 @@ class TradingLogic:
             return True
             
         return False
+    
+    def _close_position(self, symbol):
+        """
+        Close a specific position
         
-    def _positions_exist(self):
-        """Check if any positions exist in the account"""
-        positions = self.tasty_client.get_positions()
-        return len(positions) > 0
-        
+        Args:
+            symbol: Stock symbol to close
+        """
+        logger.info(f"Closing position for {symbol}")
+        self.tasty_client.close_position(symbol)
+    
     def _close_all_positions(self):
-        """Close all positions in the account"""
-        logger.info("Closing all positions")
-        positions = self.tasty_client.get_positions()
+        """Close both MSTU and MSTZ positions"""
+        logger.info("Closing all positions (MSTU and MSTZ)")
+        self._close_position(self.long_symbol)
+        self._close_position(self.short_symbol)
         
-        for position in positions:
-            symbol = position['symbol']
-            self.tasty_client.close_position(symbol)
-            logger.info(f"Closed position for {symbol}")
-            
     def handle_long_signal(self):
         """
         Handle a long signal
         
         If in lockout period: close all positions
-        If positions exist: buy max MSTU, wait 1s, close MSTZ
-        If only cash: buy MSTU with 50% of available cash
+        Otherwise: buy max MSTU, pause 1s, close MSTZ
         """
         logger.info("Handling long signal")
         
@@ -70,41 +75,31 @@ class TradingLogic:
             logger.info("In lockout period, closing all positions")
             self._close_all_positions()
             return
+        
+        # Use binary search to buy as many MSTU shares as possible
+        shares_bought = self.binary_search.find_max_buyable_shares(self.long_symbol)
+        
+        # Check if shares were successfully bought
+        if shares_bought > 0:
+            logger.info(f"Successfully bought {shares_bought} shares of {self.long_symbol}")
+            self.last_successful_buy = datetime.now()
             
-        if self._positions_exist():
-            logger.info("Positions exist, buying max MSTU and closing MSTZ")
-            # Buy as many MSTU shares as possible with all available cash
-            shares_bought = self.binary_search.find_max_buyable_shares(self.long_symbol)
+            # Pause 1 second after buying
+            logger.info("Pausing for 1 second")
+            time.sleep(1)
             
-            if shares_bought > 0:
-                logger.info(f"Successfully bought {shares_bought} shares of {self.long_symbol}")
-                self.last_successful_buy = datetime.now()
-                
-                # Pause 1 second
-                time.sleep(1)
-                
-                # Close all MSTZ positions
-                self.tasty_client.close_position(self.short_symbol)
-            else:
-                logger.warning(f"Failed to buy any shares of {self.long_symbol}")
+            # Close all MSTZ positions
+            logger.info(f"Closing all {self.short_symbol} positions")
+            self._close_position(self.short_symbol)
         else:
-            logger.info("No positions exist, buying MSTU with 50% of available cash")
-            # Only cash exists, buy MSTU with 50% of available cash
-            shares_bought = self.binary_search.find_max_buyable_shares(self.long_symbol, max_cash_percentage=0.5)
-            
-            if shares_bought > 0:
-                logger.info(f"Successfully bought {shares_bought} shares of {self.long_symbol} with 50% of available cash")
-                self.last_successful_buy = datetime.now()
-            else:
-                logger.warning(f"Failed to buy any shares of {self.long_symbol}")
+            logger.warning(f"Failed to buy any shares of {self.long_symbol}")
                 
     def handle_short_signal(self):
         """
         Handle a short signal
         
         If in lockout period: close all positions
-        If positions exist: buy max MSTZ, wait 1s, close MSTU
-        If only cash: buy MSTZ with 50% of available cash
+        Otherwise: buy max MSTZ, pause 1s, close MSTU
         """
         logger.info("Handling short signal")
         
@@ -114,29 +109,20 @@ class TradingLogic:
             self._close_all_positions()
             return
             
-        if self._positions_exist():
-            logger.info("Positions exist, buying max MSTZ and closing MSTU")
-            # Buy as many MSTZ shares as possible with all available cash
-            shares_bought = self.binary_search.find_max_buyable_shares(self.short_symbol)
+        # Use binary search to buy as many MSTZ shares as possible
+        shares_bought = self.binary_search.find_max_buyable_shares(self.short_symbol)
+        
+        # Check if shares were successfully bought
+        if shares_bought > 0:
+            logger.info(f"Successfully bought {shares_bought} shares of {self.short_symbol}")
+            self.last_successful_buy = datetime.now()
             
-            if shares_bought > 0:
-                logger.info(f"Successfully bought {shares_bought} shares of {self.short_symbol}")
-                self.last_successful_buy = datetime.now()
-                
-                # Pause 1 second
-                time.sleep(1)
-                
-                # Close all MSTU positions
-                self.tasty_client.close_position(self.long_symbol)
-            else:
-                logger.warning(f"Failed to buy any shares of {self.short_symbol}")
+            # Pause 1 second after buying
+            logger.info("Pausing for 1 second")
+            time.sleep(1)
+            
+            # Close all MSTU positions
+            logger.info(f"Closing all {self.long_symbol} positions")
+            self._close_position(self.long_symbol)
         else:
-            logger.info("No positions exist, buying MSTZ with 50% of available cash")
-            # Only cash exists, buy MSTZ with 50% of available cash
-            shares_bought = self.binary_search.find_max_buyable_shares(self.short_symbol, max_cash_percentage=0.5)
-            
-            if shares_bought > 0:
-                logger.info(f"Successfully bought {shares_bought} shares of {self.short_symbol} with 50% of available cash")
-                self.last_successful_buy = datetime.now()
-            else:
-                logger.warning(f"Failed to buy any shares of {self.short_symbol}")
+            logger.warning(f"Failed to buy any shares of {self.short_symbol}")
